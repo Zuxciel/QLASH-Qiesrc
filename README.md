@@ -78,17 +78,7 @@ Final squeeze: 82.67 ms (0.36%)
 
 - C++17 compatible compiler
 - FFTW3 library
-- CMake 3.10 or higher
-
-### Building from Source
-
-```bash
-git clone https://github.com/yourusername/qlash.git
-cd qlash
-mkdir build && cd build
-cmake ..
-make
-```
+- Mysys2
 
 ## 💻 Usage
 
@@ -190,15 +180,9 @@ This project is licensed under the Unlicense - see the [LICENSE](LICENSE) file f
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## 📫 Contact
 
-Project Link: [https://github.com/yourusername/qlash](https://github.com/yourusername/qlash)
+Project Link: [https://github.com/ZuxCiel/QLASH-Qiesrc](https://github.com/ZuxCiel/QLASH-Qiesrc)
 
 ---
 
