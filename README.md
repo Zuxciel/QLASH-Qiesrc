@@ -1,8 +1,6 @@
 # QLASH: Quantum-Lattice Advanced Secure Hashing
 
 <div align="center">
-  <img src="https://imgur.com/a/9jsYNju" alt="QLASH Logo">
-  <br>
   <a href="https://github.com/yourusername/qlash"><img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version"></a>
   <a href="https://github.com/yourusername/qlash/releases"><img src="https://img.shields.io/badge/build-20250424-green.svg" alt="Build"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Unlicense-orange.svg" alt="License"></a>
@@ -31,16 +29,46 @@ QLASH is optimized for performance with several acceleration techniques:
 ## 📊 Benchmark
 
 ```
-===== QLASH Benchmark Summary =====
-Total time: 82.45 ms
-Bytes processed: 134.22 MB
-Throughput: 1628.31 MB/s
+===== QLASH Benchmark Summary (256-bit Output) =====
+Total time: 23319.3 ms
+Bytes processed: 3417999 bytes (3.25966 MB)
+Files processed: 1
+Throughput: 0.14 MB/s
+
 --- Time breakdown ---
-Preprocessing: 14.23 ms (17.26%)
-Lattice operations: 42.87 ms (52.00%)
-Avalanche transform: 15.32 ms (18.58%)
-S-box operations: 5.56 ms (6.74%)
-Final squeeze: 4.47 ms (5.42%)
+Preprocessing: 954.76 ms (4.09%)
+Lattice operations: 21052.67 ms (90.28%)
+Avalanche transform: 576.80 ms (2.47%)
+S-box operations: 198.20 ms (0.85%)
+Final squeeze: 80.72 ms (0.35%)
+=================================
+
+===== QLASH Benchmark Summary (384-bit Output) =====
+Total time: 22957.63 ms
+Bytes processed: 3417999 bytes (3.26 MB)
+Files processed: 1
+Throughput: 0.14 MB/s
+
+--- Time breakdown ---
+Preprocessing: 895.59 ms (3.90%)
+Lattice operations: 20803.15 ms (90.62%)
+Avalanche transform: 542.14 ms (2.36%)
+S-box operations: 196.81 ms (0.86%)
+Final squeeze: 81.20 ms (0.35%)
+=================================
+
+===== QLASH Benchmark Summary (512-bit Output) =====
+Total time: 23068.92 ms
+Bytes processed: 3417999 bytes (3.26 MB)
+Files processed: 1
+Throughput: 0.14 MB/s
+
+--- Time breakdown ---
+Preprocessing: 903.32 ms (3.92%)
+Lattice operations: 20880.63 ms (90.51%)
+Avalanche transform: 563.54 ms (2.44%)
+S-box operations: 196.52 ms (0.85%)
+Final squeeze: 82.67 ms (0.36%)
 =================================
 ```
 
