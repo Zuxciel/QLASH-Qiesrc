@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QLASH Authentication</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .tab-header {
+            display: flex;
+            background-color: #4a90e2;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background-color: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background-color: #fff;
+            color: #4a90e2;
+        }
+        
+        .tab-content {
+            padding: 30px;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #3a7bc8;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 5px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #2ecc71;
+            margin-top: 5px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .dashboard {
+            padding: 30px;
+            display: none;
+        }
+        
+        .dashboard h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .dashboard-content {
+            margin-bottom: 30px;
+        }
+        
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a90e2;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="auth-container">
+        <div class="tab-header">
+            <button class="tab-btn active" data-tab="login">Login</button>
+            <button class="tab-btn" data-tab="signup">Sign Up</button>
+        </div>
+        <div class="tab-content">
+            <!-- Login Form -->
+            <form class="form active" id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div class="error-message" id="login-error"></div>
+                <div class="success-message" id="login-success"></div>
+                <div class="loader" id="login-loader"></div>
+                <button type="submit">Login</button>
+            </form>
+            
+            <!-- Signup Form -->
+            <form class="form" id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required minlength="8">
+                    <small style="display: block; margin-top: 5px; color: #666;">
+                        Password must be at least 8 characters long
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <input type="password" id="signup-confirm-password" required>
+                </div>
+                <div class="error-message" id="signup-error"></div>
+                <div class="success-message" id="signup-success"></div>
+                <div class="loader" id="signup-loader"></div>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Dashboard (displayed after successful login) -->
+    <div class="container" id="dashboard-container" style="display: none;">
+        <div class="dashboard">
+            <h2>Welcome, <span id="user-name"></span>!</h2>
+            <div class="dashboard-content">
+                <p>You are now logged in securely using QLASH API for authentication.</p>
+                <p>Your session is securely stored using localStorage.</p>
+            </div>
+            <button id="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const forms = document.querySelectorAll('.form');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const authContainer = document.getElementById('auth-container');
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const userNameElement = document.getElementById('user-name');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        // QLASH API Configuration
+        const QLASH_API_URL = 'http://localhost:8080';
+        
+        // Check if user is already logged in
+        function checkLoggedInStatus() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                showDashboard(currentUser);
+            }
+        }
+        
+        // Initialize tabs
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all tabs and forms
+                tabBtns.forEach(b => b.classList.remove('active'));
+                forms.forEach(f => f.classList.remove('active'));
+                
+                // Add active class to current tab and form
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(`${tabId}-form`).classList.add('active');
+                
+                // Clear messages
+                document.getElementById(`${tabId}-error`).style.display = 'none';
+                document.getElementById(`${tabId}-success`).style.display = 'none';
+            });
+        });
+        
+        // Hash password using QLASH API
+        async function hashPassword(password) {
+            try {
+                const response = await fetch(`${QLASH_API_URL}/api/hash/hex`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: password
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to hash password');
+                }
+                
+                return await response.text();
+            } catch (error) {
+                console.error('Error hashing password:', error);
+                // Fallback to a simpler hash if API is not available
+                return fallbackHash(password);
+            }
+        }
+        
+        // Fallback hash function in case API is unavailable
+        function fallbackHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash.toString(16);
+        }
+        
+        // Show error message
+        function showError(formId, message) {
+            const errorElement = document.getElementById(`${formId}-error`);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            document.getElementById(`${formId}-success`).style.display = 'none';
+        }
+        
+        // Show success message
+        function showSuccess(formId, message) {
+            const successElement = document.getElementById(`${formId}-success`);
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            document.getElementById(`${formId}-error`).style.display = 'none';
+        }
+        
+        // Show loading indicator
+        function setLoading(formId, isLoading) {
+            const loader = document.getElementById(`${formId}-loader`);
+            const button = document.querySelector(`#${formId}-form button`);
+            
+            if (isLoading) {
+                loader.style.display = 'block';
+                button.disabled = true;
+            } else {
+                loader.style.display = 'none';
+                button.disabled = false;
+            }
+        }
+        
+        // Show dashboard
+        function showDashboard(user) {
+            authContainer.style.display = 'none';
+            dashboardContainer.style.display = 'block';
+            userNameElement.textContent = user.name;
+        }
+        
+        // Handle signup form submission
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            
+            // Validate form
+            if (password !== confirmPassword) {
+                showError('signup', 'Passwords do not match');
+                return;
+            }
+            
+            // Show loading
+            setLoading('signup', true);
+            
+            try {
+                // Check if user already exists
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const existingUser = users.find(user => user.email === email);
+                
+                if (existingUser) {
+                    showError('signup', 'User with this email already exists');
+                    setLoading('signup', false);
+                    return;
+                }
+                
+                // Hash password using QLASH API
+                const hashedPassword = await hashPassword(password);
+                
+                // Create new user
+                const newUser = {
+                    id: Date.now().toString(),
+                    name,
+                    email,
+                    password: hashedPassword
+                };
+                
+                // Save user to localStorage
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Show success message
+                showSuccess('signup', 'Account created successfully! You can now login.');
+                
+                // Reset form
+                signupForm.reset();
+                
+                // Switch to login tab after a short delay
+                setTimeout(() => {
+                    tabBtns[0].click();
+                }, 2000);
+                
+            } catch (error) {
+                showError('signup', 'Error creating account: ' + error.message);
+            } finally {
+                setLoading('signup', false);
+            }
+        });
+        
+        // Handle login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            // Show loading
+            setLoading('login', true);
+            
+            try {
+                // Hash password using QLASH API
+                const hashedPassword = await hashPassword(password);
+                
+                // Get users from localStorage
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                // Find user with matching email and password
+                const user = users.find(user => user.email === email && user.password === hashedPassword);
+                
+                if (user) {
+                    // Store current user in localStorage (without password)
+                    const currentUser = {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // Show success message
+                    showSuccess('login', 'Login successful! Redirecting...');
+                    
+                    // Show dashboard after short delay
+                    setTimeout(() => {
+                        showDashboard(currentUser);
+                    }, 1000);
+                } else {
+                    showError('login', 'Invalid email or password');
+                }
+                
+            } catch (error) {
+                showError('login', 'Error logging in: ' + error.message);
+            } finally {
+                setLoading('login', false);
+            }
+        });
+        
+        // Handle logout
+        logoutBtn.addEventListener('click', () => {
+            // Remove current user from localStorage
+            localStorage.removeItem('currentUser');
+            
+            // Show login form
+            authContainer.style.display = 'block';
+            dashboardContainer.style.display = 'none';
+            
+            // Reset login form
+            loginForm.reset();
+            document.getElementById('login-error').style.display = 'none';
+            document.getElementById('login-success').style.display = 'none';
+            
+            // Switch to login tab
+            tabBtns[0].click();
+        });
+        
+        // Check if user is already logged in on page load
+        window.addEventListener('DOMContentLoaded', checkLoggedInStatus);
+    </script>
+</body>
+</html>
